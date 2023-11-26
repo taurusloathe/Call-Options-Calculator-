@@ -3,10 +3,16 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
+from kivy.uix.spinner import Spinner
 
 class OptionsCalculatorApp(App):
     def build(self):
         self.layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
+
+        # Option Type Selection
+        self.layout.add_widget(Label(text='Option Type:'))
+        self.option_type_spinner = Spinner(text='Call', values=('Call', 'Put'))
+        self.layout.add_widget(self.option_type_spinner)
 
         # Entry Price
         self.layout.add_widget(Label(text='Entry Price:'))
@@ -40,6 +46,7 @@ class OptionsCalculatorApp(App):
 
     def calculate_profit_loss(self, instance):
         try:
+            option_type = self.option_type_spinner.text.lower()
             entry_price = float(self.entry_price_input.text)
             exit_price = float(self.exit_price_input.text)
             contracts = float(self.contracts_input.text)
@@ -47,7 +54,13 @@ class OptionsCalculatorApp(App):
 
             total_cost = entry_price * contracts * multiplier
             total_revenue = exit_price * contracts * multiplier
-            profit_loss = total_revenue - total_cost
+
+            if option_type == 'call':
+                profit_loss = total_revenue - total_cost
+            elif option_type == 'put':
+                profit_loss = total_cost - total_revenue
+            else:
+                raise ValueError("Invalid option type. Use 'Call' or 'Put'.")
 
             self.result_label.text = f"Profit/Loss: ${profit_loss:.2f}"
         except ValueError:
