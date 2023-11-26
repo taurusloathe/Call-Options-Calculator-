@@ -1,0 +1,57 @@
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
+
+class OptionsCalculatorApp(App):
+    def build(self):
+        self.layout = BoxLayout(orientation='vertical', spacing=10, padding=10)
+
+        # Entry Price
+        self.layout.add_widget(Label(text='Entry Price:'))
+        self.entry_price_input = TextInput(multiline=False)
+        self.layout.add_widget(self.entry_price_input)
+
+        # Exit Price
+        self.layout.add_widget(Label(text='Exit Price:'))
+        self.exit_price_input = TextInput(multiline=False)
+        self.layout.add_widget(self.exit_price_input)
+
+        # Contracts
+        self.layout.add_widget(Label(text='Contracts:'))
+        self.contracts_input = TextInput(multiline=False)
+        self.layout.add_widget(self.contracts_input)
+
+        # Multiplier
+        self.layout.add_widget(Label(text='Multiplier:'))
+        self.multiplier_input = TextInput(multiline=False)
+        self.layout.add_widget(self.multiplier_input)
+
+        # Calculate Button
+        calculate_button = Button(text='Calculate', on_press=self.calculate_profit_loss)
+        self.layout.add_widget(calculate_button)
+
+        # Result Label
+        self.result_label = Label(text='')
+        self.layout.add_widget(self.result_label)
+
+        return self.layout
+
+    def calculate_profit_loss(self, instance):
+        try:
+            entry_price = float(self.entry_price_input.text)
+            exit_price = float(self.exit_price_input.text)
+            contracts = float(self.contracts_input.text)
+            multiplier = float(self.multiplier_input.text)
+
+            total_cost = entry_price * contracts * multiplier
+            total_revenue = exit_price * contracts * multiplier
+            profit_loss = total_revenue - total_cost
+
+            self.result_label.text = f"Profit/Loss: ${profit_loss:.2f}"
+        except ValueError:
+            self.result_label.text = "Invalid input. Please enter numeric values."
+
+if __name__ == '__main__':
+    OptionsCalculatorApp().run()
