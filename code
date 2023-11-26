@@ -34,6 +34,11 @@ class OptionsCalculatorApp(App):
         self.multiplier_input = TextInput(multiline=False)
         self.layout.add_widget(self.multiplier_input)
 
+        # Option Contract Price
+        self.layout.add_widget(Label(text='Option Contract Price:'))
+        self.contract_price_input = TextInput(multiline=False)
+        self.layout.add_widget(self.contract_price_input)
+
         # Calculate Button
         calculate_button = Button(text='Calculate', on_press=self.calculate_profit_loss)
         self.layout.add_widget(calculate_button)
@@ -51,9 +56,10 @@ class OptionsCalculatorApp(App):
             exit_price = float(self.exit_price_input.text)
             contracts = float(self.contracts_input.text)
             multiplier = float(self.multiplier_input.text)
+            contract_price = float(self.contract_price_input.text)
 
-            total_cost = entry_price * contracts * multiplier
-            total_revenue = exit_price * contracts * multiplier
+            total_cost = (entry_price + contract_price) * contracts * multiplier
+            total_revenue = (exit_price - contract_price) * contracts * multiplier
 
             if option_type == 'call':
                 profit_loss = total_revenue - total_cost
